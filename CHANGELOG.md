@@ -12,6 +12,33 @@ If you cloned at version X, and the template is now at Y, read entries between t
 
 ---
 
+## 2.2.0 — lightweight decision routing
+
+**Why:** agents can keep momentum on technical choices while using an explicit blast-radius rubric to escalate architectural, strategic, or high-risk decisions.
+
+**Changed files:**
+
+- `.claude/ARCHITECTURE.md` — replaced the three-class uncertainty model with four decision routes: Tactical, Technical, Architectural, Strategic / risk.
+
+- `.claude/agents/planner.md` — added `## Decision log` to the plan template. Planners now log technical choices with rationale and rejected alternatives, while escalating architectural and strategic decisions.
+
+- `.claude/agents/auditor.md` — plan audit now checks decision routing integrity: technical choices may be logged, but architectural/strategic/risky choices cannot be buried in the plan.
+
+- `.claude/commands/sb-plan.md` — planner summaries and plan-audit dispatch now include `#decision-log`.
+
+- `.claude/commands/sb-work.md` — implementation now routes decisions while executing: tactical decide silently, technical log, architectural/strategic/risk stop and ask.
+
+- `.claude/commands/sb-review.md` and `.claude/agents/reviewer.md` — review now checks that technical decisions were logged and higher-risk decisions were escalated or linked to `docs/decisions/`.
+
+- `README.md` — strong opinions now describe lightweight decision routing as part of the workflow.
+
+**Migration notes:**
+
+- Existing plans do not have `## Decision log`; add it the next time a plan is touched.
+- Do not backfill `docs/decisions/` for technical choices unless they became project precedent.
+
+---
+
 ## 2.1.0 — lanes, contract, divergence enforcement, learning metrics
 
 **Why:** four risks identified in v2.0 review — process fatigue, no first-class contract artifact, weak divergence enforcement, no learning-metric path for pre-product work. All addressed without adding new agents or commands.

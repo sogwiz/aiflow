@@ -18,6 +18,10 @@ Plan: **$ARGUMENTS** (default: most recently modified `docs/plans/*.md`)
    - State which step you're on
    - Make the change
    - Run the relevant test or verification
+   - If you hit a decision, route it:
+     - Tactical → decide silently
+     - Technical → decide, then log it under the plan's `## Decision log` or `## Deviations` with rationale
+     - Architectural / strategic / high-risk → stop and ask the user; log the resolved decision to `docs/decisions/`
    - **If reality diverges from the plan** (file shape different than expected, dependency missing, function doesn't exist), **stop**. Do not improvise. Pause and ask:
      - Revise the plan to match reality?
      - Proceed with a documented deviation?
@@ -40,6 +44,7 @@ Plan: **$ARGUMENTS** (default: most recently modified `docs/plans/*.md`)
 
    Also produce a final summary:
    - Files changed
+   - Technical decisions logged
    - Tests run + results
    - Followups noticed but not in scope (logged under `## Followups`)
 
@@ -47,6 +52,7 @@ Plan: **$ARGUMENTS** (default: most recently modified `docs/plans/*.md`)
 
 - No scope creep. If you notice unrelated issues, add them to the plan's `## Followups`. Do not fix them in this session.
 - No skipping tests because "obviously correct."
+- Technical decisions can be made without pausing, but they must be logged. Architectural, strategic, and high-risk decisions require user approval.
 - **The divergence summary is mandatory.** If you find yourself wanting to omit it because "nothing meaningful diverged," produce it anyway saying so explicitly. Silent matches and silent improvisations look identical from outside — the summary is what distinguishes them.
 - If you have to deviate from a step, record it in the plan file under `## Deviations` with rationale. The summary then references that section.
 - After completion, suggest `/sb-review` as the next step. The reviewer agent specifically checks for undocumented divergences (code that does things the plan didn't list, without a `## Deviations` entry explaining why).

@@ -16,7 +16,7 @@ Diff target: **$ARGUMENTS** (default: unstaged + staged changes, fall back to `H
 2. Dispatch `reviewer`. Pass:
    - The diff range
    - Pointer to the source plan in `docs/plans/`
-   - "Run all four passes (correctness, edge cases, security, simplicity). Switch frame explicitly between passes."
+   - "Run Pass 0 plus all four review passes. In Pass 0, check plan divergence and decision routing: technical decisions should be logged; architectural/strategic/risk decisions should be escalated or linked to `docs/decisions/`. Switch frame explicitly between passes."
 3. The reviewer writes consolidated findings to `docs/reviews/<date>-<slug>-review.md`.
 4. Surface to the user. Offer to apply fixes for blocking findings (confirm before editing).
 5. After fixes, optionally re-dispatch for the affected passes to confirm closure.

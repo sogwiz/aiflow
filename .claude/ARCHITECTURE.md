@@ -55,15 +55,24 @@ Agent (implementor or auditor)
 
 One-hop only. Agents don't dispatch agents. Orchestrators never do agent work themselves.
 
-## Escalation contract (three classes)
+## Decision routing
 
-Agents classify uncertainty:
+Agents classify decisions by blast radius:
 
-- **Judgment** — multiple defensible options, depends on your values → **escalate**
-- **Risk** — irreversible or high blast radius → **escalate**
-- **Routine** — any reasonable choice works → **pick and document under `## Assumptions`**
+- **Tactical** — naming, imports, formatting, local refactors → decide silently
+- **Technical** — library options, implementation pattern, cache shape, test strategy → decide and log under the plan's `## Decision log` (or the relevant generated artifact outside `/sb-plan`)
+- **Architectural** — component boundary, public interface, dependency direction, data model, new external service → escalate
+- **Strategic / risk** — scope, product direction, user promise, irreversible or high-blast-radius action → escalate
 
-Every escalation includes a recommendation with rationale so you can disagree with the *reasoning*, not just pick a letter. Decisions log to `docs/decisions/` and future agents read them as precedent.
+Use this rubric in order:
+
+1. **Could this change the product promise, user scope, roadmap priority, red line, or success metric?** Strategic / risk.
+2. **Could this be hard to reverse, expose data, affect auth/payments/PII/schema/migrations, or change behavior outside the current feature?** Strategic / risk.
+3. **Could another feature reasonably depend on this boundary, interface, data model, dependency direction, or external service choice?** Architectural.
+4. **Is this a meaningful implementation choice inside approved boundaries, with reversible consequences?** Technical.
+5. **Is this only local naming, organization, formatting, or glue code with no behavioral or interface impact?** Tactical.
+
+Every escalation includes a recommendation with rationale so you can disagree with the *reasoning*, not just pick a letter. Human-resolved architectural, strategic, and risk decisions log to `docs/decisions/` and future agents read them as precedent. Technical decisions stay close to the work unless repeated enough to promote into `CLAUDE.md`.
 
 ## The vision-to-feature pipeline
 

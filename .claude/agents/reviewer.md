@@ -23,14 +23,17 @@ Frame: "Does the code match what the plan said it would do — and where it does
 This pass runs first because divergences propagate into the other passes. A function that wasn't supposed to exist might still be correct in isolation, but if it's there silently, that's a discipline failure that matters.
 
 Procedure:
-1. Read the plan's `## Steps`, `## Affected files`, and `## Contract` sections.
+1. Read the plan's `## Steps`, `## Affected files`, `## Contract`, and `## Decision log` sections.
 2. Compare against `git diff`:
    - Files modified that weren't in `## Affected files` (and not appended as additive-only per the contract) — flag unless explained in `## Deviations`.
    - Files in `## Affected files` that weren't modified — flag (incomplete work).
    - Public interface from `## Contract` — does the code actually expose what the contract promised?
    - "Must not modify" files from `## Contract` — verify untouched.
-3. Read the `/sb-work` divergence summary if it's in the conversation. Compare its claims to what's actually in the plan's `## Deviations` section.
-4. **Undocumented divergences are blocking.** Code that does things the plan didn't list, without a `## Deviations` entry explaining why, is a finding regardless of whether the code itself is correct. The discipline of "plans are commitments, not suggestions" depends on this check.
+3. Check decision routing:
+   - Technical decisions are acceptable if logged with rationale in `## Decision log`.
+   - Architectural, strategic, or high-risk decisions made during implementation should have an entry in `docs/decisions/` or an explicit user-approved deviation.
+4. Read the `/sb-work` divergence summary if it's in the conversation. Compare its claims to what's actually in the plan's `## Deviations` section.
+5. **Undocumented divergences are blocking.** Code that does things the plan didn't list, without a `## Deviations` entry explaining why, is a finding regardless of whether the code itself is correct. The discipline of "plans are commitments, not suggestions" depends on this check.
 
 If Pass 0 finds undocumented divergences, surface them prominently in the review output. They predict downstream drift and are the earliest place to catch erosion of plan discipline.
 
@@ -99,6 +102,11 @@ _Reviewed: <date>_  _Plan: <path>_
 ## Plan-vs-code divergence summary
 - **Undocumented divergences found:** <count> (any > 0 escalates verdict toward "ship with fixes" minimum)
 - <For each: `<file:line>` — what diverged, whether logged in plan's `## Deviations`>
+
+## Decision routing check
+- **Technical decisions logged:** <yes/no>
+- **Architectural/strategic/risk decisions escalated:** <yes/no/not applicable>
+- <Any decision that should have been escalated but wasn't>
 
 ## Blocking
 - [ ] **[divergence]** `<file>:<line>` — undocumented change vs plan — <fix: document in plan §Deviations or revert>

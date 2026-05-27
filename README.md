@@ -111,8 +111,9 @@ These are the design calls worth knowing about. Full rationale in `.claude/ARCHI
 6. **Menu-driven elicitation.** Vision questions, metrics questions, and similar use propose-then-confirm with concrete options — never freehand "what are your metrics" cold.
 7. **Compose with built-ins, never replace.** `/sb-init` invokes Claude Code's built-in `/init` first to scaffold CLAUDE.md, then layers the deep intake.
 8. **Roadmap-driven parallelism.** ROADMAP.md annotates features with which architecture components they touch. Features touching different components can be built concurrently.
-9. **Decisions log is the system's memory of your judgment.** Authors read precedent before escalating. Repeated decisions promote to CLAUDE.md.
-10. **Eval is the truth source.** Strategy is aspirational until measured. The 30-day eval catches premise problems that the build loop misses.
+9. **Decision routing keeps momentum without hiding risk.** Agents decide tactical details silently, decide and log technical choices in the plan, and escalate architectural/strategic/risky choices to you.
+10. **Decisions log is the system's memory of your judgment.** Human-resolved architectural, strategic, and risk decisions go in `docs/decisions/`. Repeated decisions promote to CLAUDE.md.
+11. **Eval is the truth source.** Strategy is aspirational until measured. The 30-day eval catches premise problems that the build loop misses.
 
 ## What we cut to get here
 

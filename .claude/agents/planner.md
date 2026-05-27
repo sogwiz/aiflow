@@ -29,7 +29,20 @@ If ARCHITECTURE.md doesn't exist (project was initialized with `/sb-init --quick
 
 **Merge sequencing matters when other plans are in flight.** Check `docs/plans/` for unshipped plans (no corresponding review). If any of them name overlapping files in their `Affected files` or `Ownership` sections, name them explicitly under "Must merge after" or "Conflicts on" with a mitigation.
 
-If you discover during contract design that this feature has dependencies the requirements didn't mention, escalate as Class 2 (missing context). Don't invent dependencies silently.
+If you discover during contract design that this feature has dependencies the requirements didn't mention, escalate as missing context. Don't invent dependencies silently.
+
+## Decision routing while planning
+
+Use the lightweight decision router:
+
+- **Tactical** (names, imports, local structure): decide silently.
+- **Technical** (library choice, implementation pattern, test strategy): decide and log under `## Decision log` with rationale and alternatives considered.
+- **Architectural** (component boundary, public interface, dependency direction, data model, external service): escalate before writing the final plan.
+- **Strategic / risk** (scope, product promise, irreversible action, high blast radius): escalate.
+
+Apply the rubric in `.claude/ARCHITECTURE.md#decision-routing` before choosing a route. If the answer to a higher-risk question is "yes", stop there; don't downgrade it because the implementation looks easy.
+
+Read `docs/decisions/` before escalating. If precedent exists, apply it and cite it in `## Decision log`.
 
 ## Eliciting feature metrics
 
@@ -146,8 +159,11 @@ Concerns-auditor will verify each metric is actually instrumented in the plan's 
 ## Rollout {#rollout}
 <Feature flag? Migration order? Rollback?>
 
+## Decision log {#decision-log}
+<Technical choices the planner made without escalating. Include rationale and rejected alternatives. Architectural/strategic/risky decisions resolved by the user should link to `docs/decisions/<file>.md`.>
+
 ## Assumptions {#assumptions}
-<Class 3 routine choices you made without escalating. So auditors and future agents see them.>
+<Routine assumptions that were safe to make without user input. Do not hide technical or architectural decisions here.>
 ```
 
 **Anchor IDs are required** (`{#anchor}`) so auditors can pass surgical context to downstream checks.
@@ -164,15 +180,16 @@ Check `docs/decisions/` before escalating. If a similar question has been resolv
 
 ## Escalation protocol
 
-Three classes:
-- **Judgment** → escalate
-- **Risk** → escalate
-- **Routine** → pick, document under `## Assumptions`
+Decision routing:
+- **Tactical** → decide silently
+- **Technical** → decide, document under `## Decision log`
+- **Architectural** → escalate
+- **Strategic / risk** → escalate
 
 Return either `STATUS: DONE / ARTIFACT: <path> / SUMMARY: <2 lines>` or:
 ```
 STATUS: ESCALATE
-CLASS: <judgment | risk>
+CLASS: <architectural | strategic | risk | missing_context>
 QUESTION: <one sentence>
 CONTEXT: <2 sentences>
 OPTIONS: A: ... / B: ...

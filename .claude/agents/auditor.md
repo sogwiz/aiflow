@@ -83,6 +83,11 @@ For each edge case the requirements named, find where it's addressed in the plan
 - If `docs/ARCHITECTURE.md` exists, does the plan respect component boundaries? Does it introduce a new dependency between components that the architecture didn't anticipate?
 - Cross-component changes that aren't reflected in ARCHITECTURE.md are flag-worthy — either the plan should be revised or the architecture updated first.
 
+**Decision routing integrity**
+- Technical choices may be made by the planner, but they must appear in `## Decision log` with rationale and rejected alternatives.
+- Architectural, strategic, or high-risk choices must not be buried in `## Decision log` or `## Assumptions`. If you find one, mark it blocking and recommend escalation to the user.
+- If `## Decision log` references a human decision, verify it links to a file in `docs/decisions/`.
+
 **Contract integrity — BLOCKING if violated**
 The plan's `## Contract` section must be present and internally consistent:
 - "Owns (will modify)" files must overlap with `## Affected files` — if a file is in Affected but not Owns, that's contradictory; either the boundary is wrong or the file shouldn't be modified.

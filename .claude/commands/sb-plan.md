@@ -102,11 +102,11 @@ Either is acceptable. Silent omission is not.
 
 **SURFACE the planner's questions to the user when the planner asks them.** Pass through verbatim — don't paraphrase the metric menu options. User answers; you relay back to planner.
 
-**SURFACE the draft plan** when the planner returns DONE. Show the file path and a summary of: goal, approach, success metrics named, affected files, key steps.
+**SURFACE the draft plan** when the planner returns DONE. Show the file path and a summary of: goal, approach, success metrics named, technical decisions logged, affected files, key steps.
 
 ## Stage 3: Plan audit
 
-**Dispatch auditor in plan mode.** Anchor-based: "Read docs/plans/<slug>-plan.md sections #affected-files, #contract, #steps, #tests, #metrics, #rollout. Spot-check #affected-files against actual code. Build metric instrumentation traceability table. Check edge case traceability from the source requirements. Verify #contract integrity: ownership matches affected files, public interface is specific, acceptance criteria are observable, boundaries respect ARCHITECTURE.md if it exists, merge sequencing references plans that exist."
+**Dispatch auditor in plan mode.** Anchor-based: "Read docs/plans/<slug>-plan.md sections #affected-files, #contract, #decision-log, #steps, #tests, #metrics, #rollout. Spot-check #affected-files against actual code. Build metric instrumentation traceability table. Check edge case traceability from the source requirements. Verify #contract integrity: ownership matches affected files, public interface is specific, acceptance criteria are observable, boundaries respect ARCHITECTURE.md if it exists, merge sequencing references plans that exist. Verify #decision-log contains technical decisions only; architectural, strategic, and high-risk choices must be escalated or linked to docs/decisions/."
 
 **SURFACE findings to the user.** Pay particular attention to contract findings — they predict downstream parallel-development friction.
 

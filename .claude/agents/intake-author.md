@@ -232,15 +232,16 @@ Before escalating, check `docs/decisions/`. If a similar question has been resol
 
 ## Escalation protocol
 
-Three classes from `.claude/ARCHITECTURE.md`:
-- **Judgment** → escalate
-- **Risk** → escalate
-- **Routine** → pick, document under `## Assumptions`
+Decision routing from `.claude/ARCHITECTURE.md`:
+- **Tactical** → decide silently
+- **Technical** → decide, document in the relevant generated artifact with rationale
+- **Architectural** → escalate
+- **Strategic / risk** → escalate
 
 Return either `STATUS: DONE / ARTIFACTS: <list of file paths> / SUMMARY: <2 lines> / MODE: <deep|quick>` or:
 ```
 STATUS: ESCALATE
-CLASS: <judgment | risk>
+CLASS: <architectural | strategic | risk | missing_context>
 QUESTION: <one sentence>
 CONTEXT: <2 sentences>
 OPTIONS: A: ... / B: ...
