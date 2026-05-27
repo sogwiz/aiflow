@@ -1,0 +1,27 @@
+{
+  "_comment": "Example settings.json — copy to .claude/settings.json (project) or ~/.claude/settings.json (user) and uncomment what you want.",
+  "_comment_2": "Everything in this file is OPTIONAL. The template works without any of it.",
+
+  "_comment_hooks": "The Stop hook below runs the doc-freshness skill at the end of each Claude turn (when Claude finishes responding). The 'prompt' handler type invokes Claude with a focused prompt rather than running a shell script — so the LLM does the actual analysis, but only when the hook fires. Cost: a few hundred tokens per session end, often returning 'no updates needed' (which is free).",
+
+  "_comment_to_enable": "Remove the leading underscore from the 'hooks' key below to activate. Or copy just the 'Stop' block into your existing settings.",
+
+  "_hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Load the doc-freshness skill and run its check on this session. If nothing in this session warrants a doc update, return the 'nothing to update' response and exit. If updates are warranted, surface specific proposed diffs to the user. Do not apply changes — only propose them."
+          }
+        ]
+      }
+    ]
+  },
+
+  "_comment_env": "Optional environment toggles (none required).",
+  "env": {
+    "_comment_subagent_model": "Default model for subagents that have model: inherit in frontmatter. Sonnet is a sensible default; per-agent frontmatter overrides this.",
+    "_CLAUDE_CODE_SUBAGENT_MODEL": "claude-sonnet-4-5"
+  }
+}
