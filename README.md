@@ -2,7 +2,7 @@
 
 A Claude Code workflow template for **one-shotting a project** with an autonomous developer / tester / reviewer / adversary loop, gated by independent (different-model) audits and grounded in optional upstream domain research. Includes a manual lane for one-off changes.
 
-**Ten commands, ten agents, two skills, one optional hook.** Read this file in 5 minutes and you'll know when to run what.
+**Eleven commands, eleven agents, two skills, one optional hook.** Read this file in 5 minutes and you'll know when to run what.
 
 ## The default flow
 
@@ -104,7 +104,9 @@ Assignment / PDF / idea
 ## What each command does
 
 **Research (optional, upstream of vision):**
-- `/sb-research <topic-slug>` — thin orchestration over the built-in `deep-research` skill. Reads PDFs, repos, URLs, freeform questions; produces a 3-tier output (`INSIGHTS.md` ~500 words = always loaded by intake-author; `BRIEF.md` 1-2 pages = referenced on demand; `sources/*` = full notes for deep dives). Appends to `docs/research/INDEX.md`. Use when domain context (learning science, competitor landscape, motivation studies for an age group, etc.) should ground inception without flooding it.
+- `/sb-research <topic-slug>` — thin orchestration over the built-in `deep-research` skill. **Defaults to cheap mode** (snippet-first, source cap 8, no adversarial verification, sonnet synthesis) — ~50-70% cheaper than the old default. `--thorough` opts back into the full `deep-research` fan-out when stakes warrant. Produces a 3-tier output: `INSIGHTS.md` (≤400 words, always loaded by intake-author), `BRIEF.md` (≤1 page, on demand), `sources/*.md` (lazy — only for sources cited in INSIGHTS). Appends to `docs/research/INDEX.md`. Pass `--view` to also render the topic to HTML via `/sb-view`.
+
+- `/sb-view [<topic-slug>]` — renders the research artifacts under `docs/research/` into a beautiful, self-contained HTML site at `.local/research-views/`. **No-arg** renders the cross-topic dashboard + refreshes every topic. **With a slug** renders that one topic + refreshes the dashboard. Self-contained (no CDN, no JS, no network needed). Gitignored — for your consumption, not committed. Sized so a busy human can consume all the research in 30-60 minutes by scanning the dashboard, reading topic landings, and drilling into the topics that will inform the next `/sb-init` or `/sb-spec`.
 
 **Vision (run once at project start, refresh occasionally):**
 - `/sb-init` — four-lens intake (business, user, product, technical). 30-60 minutes of real conversation. Produces STRATEGY/ARCHITECTURE/ROADMAP. `--quick` for a 6-question fast path producing only STRATEGY. **After intake, two independent reviews run automatically** — `inception-auditor` (sonnet) for coherence/completeness/groundedness, and `devil-advocate` (sonnet, strategy target) for argument-against-the-bet. Different model from the intake author by design.
@@ -227,6 +229,7 @@ These are the design calls worth knowing about. Full rationale in `.claude/ARCHI
 ├── ARCHITECTURE.md                ← workflow contract (read this second, 5 min)
 ├── commands/                      ← orchestrators
 │   ├── sb-research.md             ← upstream domain research (NEW)
+│   ├── sb-view.md                 ← render research as HTML site for human consumption (NEW)
 │   ├── sb-init.md                 ← intake + inception audit + strategy advocate
 │   ├── sb-spec.md                 ← autonomous-loop entry point
 │   ├── sb-loop.md                 ← scheduler (default execution mode)
@@ -246,7 +249,8 @@ These are the design calls worth knowing about. Full rationale in `.claude/ARCHI
 │   ├── reviewer.md                (opus) also the Arbiter persona inside /sb-loop
 │   ├── arya.md                    (opus) developer persona
 │   ├── crucible.md                (opus) tester persona, 3-tier
-│   └── adversary.md               (sonnet) generative breaker, two targets: spec, code  (NEW)
+│   ├── adversary.md               (sonnet) generative breaker, two targets: spec, code  (NEW)
+│   └── research-renderer.md       (sonnet) renders research MD into HTML for /sb-view  (NEW)
 └── skills/
     ├── product-concerns/SKILL.md   (checklists for the concerns-auditor)
     └── doc-freshness/SKILL.md      (proposes doc updates at eval time)
@@ -275,6 +279,19 @@ docs/                             ← created by commands
     └── logs/<task-id>.md
 
 .worktrees/<run-id>/<task-id>/    ← per-task git worktree (autonomous mode)
+
+.local/                           ← gitignored; human-consumption artifacts (NEW)
+└── research-views/                ← from /sb-view
+    ├── _assets/style.css
+    ├── index.html                 ← cross-topic dashboard
+    └── <topic-slug>/              ← per-topic pages
+        ├── index.html             ← topic landing
+        ├── decisions.html
+        ├── constraints.html
+        ├── open-questions.html
+        ├── confidence.html
+        ├── sources.html
+        └── sources/<s>.html       ← per-source (cited only)
 ```
 
 ## Pulling updates from upstream
