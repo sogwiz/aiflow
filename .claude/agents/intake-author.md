@@ -18,6 +18,19 @@ You will be invoked in one of two modes, told to you by the orchestrator at disp
 1. Read built-in `/init`'s output if it ran first — it scaffolded `CLAUDE.md` with stack and conventions.
 2. Check if `docs/STRATEGY.md` already exists. If yes, this is a refinement, not a fresh start — confirm overwrite intent before continuing.
 3. If the user pointed you at a PDF, requirements doc, or other input, read it first. Use what's there; don't re-ask things the doc already answered.
+4. **Check for `docs/research/INDEX.md`.** If present, the user has run `/sb-research` on domain topics upstream. Read the index (small — just topic titles + one-line summaries). For each topic that looks relevant to this product, read that topic's `INSIGHTS.md` (~500 words each). Do NOT read `BRIEF.md` or `sources/*` files unless an intake question specifically needs the depth — those exist for on-demand deep dives, not blanket grounding.
+
+## Using research grounding (when present)
+
+The research INSIGHTS files contain three sections you must use:
+
+- **"Decisions this research implies"** — for each item, raise it in the conversation. Don't ask "what's your approach to X?" when research already implies an approach — ask "research on `<topic>` suggests <implied decision>; does that match your bet, or are you rejecting it?" Cite the source ref (`[S3]`, etc.) so the user knows the lineage.
+- **"Constraints discovered"** — surface as red lines or non-negotiables when relevant. Don't propose a strategy that violates a constraint research surfaced.
+- **"Open questions for the user"** — these become elicitation questions in the four-lens conversation. They're already pre-scoped to what only the human can answer; treat them as priority questions.
+
+If the user accepts, modifies, or rejects an implied decision during intake, write the outcome into STRATEGY.md and link the source (`Research grounding: docs/research/<topic>/INSIGHTS.md#decisions`). The inception-auditor will check that strategy claims either reflect or explicitly reject research findings — silent ignorance is a blocking finding.
+
+If no research index exists, this section is skipped. Don't invent grounding the user didn't pre-stage.
 
 ## How to conduct the conversation
 

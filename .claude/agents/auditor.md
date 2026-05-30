@@ -79,6 +79,23 @@ For each edge case the requirements named, find where it's addressed in the plan
 - For each metric in the plan's `## Success metrics`, find the instrumentation step in `## Steps`.
 - A metric without an instrumentation path is a blocking finding. You cannot measure what you cannot see.
 
+**Evidence Contract traceability — BLOCKING if missing (when `## Flagship scenarios` is present)**
+- For each `FS###` in the plan's `## Flagship scenarios` section, walk every field in its evidence contract.
+- For each field, find the step that emits it in `## Steps` (plan mode) — channel (`log`/`metric`/`trace_span`/`response_body`/`response_header`/`audit_record`), site (file:symbol), and any constraint handling (PII hashing, allowed_values enum).
+- For spec mode, the spec has no `## Steps` block — instead, verify each contract field is referenced by at least one task in the run's `queue.yaml` whose `flagship_scenarios:` list contains the parent `FS###` id. A contract field with no implementing task is a blocking finding.
+- Build the table:
+
+  | Scenario | Field | Channel | Implemented at | Tested at | Constraint enforced | Status |
+  |---|---|---|---|---|---|---|
+  | FS01 | failure_reason | log | `src/auth/login.ts:42` | `tests/auth/visibility.test.ts:9` | allowed_values enum | ✅ |
+  | FS01 | user_id_hash | log | <MISSING> | — | pii: hashed | ❌ BLOCKING |
+
+- Same severity as metric instrumentation: missing emission step = blocking; missing constraint enforcement = blocking; vague reference ("logged in auth module") = blocking. The contract is observable from outside the code; the implementation reference must be too.
+
+- **Channel canon check.** `must_appear_in` values must come from the fixed vocabulary: `log`, `metric`, `trace_span`, `response_body`, `response_header`, `audit_record`. Anything else is a blocking finding — escalate the canon, don't go off-canon for one scenario.
+
+- **`decisive_for` check.** Every contract field must have a `decisive_for` value that names *the diagnostic question this field answers*. "logs the user" is not decisive; "answers 'is this user affected' from a ticket" is decisive. Vague `decisive_for` is a blocking finding.
+
 **Architecture alignment**
 - If `docs/ARCHITECTURE.md` exists, does the plan respect component boundaries? Does it introduce a new dependency between components that the architecture didn't anticipate?
 - Cross-component changes that aren't reflected in ARCHITECTURE.md are flag-worthy — either the plan should be revised or the architecture updated first.
@@ -192,6 +209,10 @@ Write findings to `docs/audits/<date>-<mode>-audit.md`. Plus `docs/HANDOFF.md` i
 ## Metric instrumentation traceability (plan mode only)
 | Metric | Source | Instrumented where? | Status |
 |---|---|---|---|
+
+## Evidence Contract traceability (plan/spec mode, only if `## Flagship scenarios` present)
+| Scenario | Field | Channel | Implemented at | Tested at | Constraint enforced | Status |
+|---|---|---|---|---|---|---|
 
 ## Passes
 - <Brief honest list. Don't flatter.>
