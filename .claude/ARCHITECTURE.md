@@ -1,6 +1,6 @@
 # Architecture (workflow contract)
 
-Ten commands, ten agents, two skills, one optional hook. The **default execution mode is the autonomous loop** (`/sb-spec` → `/sb-loop` ↔ `/sb-resolve`), preceded by domain research (`/sb-research`) when needed, gated by an independent inception audit, and adversarially reviewed at both spec time and code time. The per-feature pipeline (`/sb-plan` → `/sb-work`) is the manual lane for one-off changes that don't justify a full run.
+Eleven commands, eleven agents, two skills, one optional hook. The **default execution mode is the autonomous loop** (`/sb-spec` → `/sb-loop` ↔ `/sb-resolve`), preceded by domain research (`/sb-research`) when needed, gated by an independent inception audit, and adversarially reviewed at both spec time and code time. The per-feature pipeline (`/sb-plan` → `/sb-work`) is the manual lane for one-off changes that don't justify a full run. `/sb-view` renders research artifacts to a self-contained HTML site at `.local/research-views/` for human consumption.
 
 Read in 5 minutes.
 
@@ -58,6 +58,7 @@ ANYTIME
 | **Concerns Auditor** | opus | Walk product-fit concerns (scale, security, accessibility, reliability, observability) per /sb-plan stage 4. | Read-only. Skill-driven checklists. |
 | **Devil's Advocate** | **sonnet** | Argue against shipping. Two targets: `plan` (per /sb-plan stage 5) and `strategy` (per /sb-init final audit). **Independent model** from the artifact's author. | Read-only. One round. State case, accept verdict, move on. |
 | **Adversary** | **sonnet** | Generative — constructs failure scenarios to break the artifact. Two targets: `spec` (mandatory at /sb-spec for flagship features; catches missing failure modes upstream) and `code` (conditional at /sb-loop after Arbiter on triggered tasks; catches implementation-specific exploits no spec could predict). | Read-only (Bash allowed for probing the worktree, never writing source). Reproductions promote findings to `confirmed-real`. |
+| **Research Renderer** | sonnet | Reads research artifacts under `docs/research/` and emits a self-contained HTML site under `.local/research-views/`. Two modes — `dashboard` (cross-topic index) and `topic` (single topic + drill-downs + per-source pages). Faithful presentation; never paraphrases. | Output is gitignored. No network, no JS, no CDN — pages work offline via `file://`. |
 | **Reviewer (Arbiter)** | opus | Critique code after implementation. Five passes plus scope-drift and evidence-regression overlays in `/sb-loop`. | Frame-switching mandatory. Quote file+line. |
 | **Arya** | opus | Developer persona inside `/sb-loop`. Implements one task per dispatch. | Full tools inside the task's worktree. Logs evidence emissions when task touches a flagship scenario. |
 | **Crucible** | opus | Tester persona inside `/sb-loop`. Three-tier testing: Evidence Contract gate → acceptance → edge/regression. | Writes test files only. Failure on Tier 0 short-circuits Tier 1 and 2. |
